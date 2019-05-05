@@ -6,7 +6,7 @@
 * mix ecto.create
 * mix phx.server
 * customize the app to say "Beeper" in main template, show off live reload
-* install coherence - from git! `{:coherence, git: "https://github.com/appprova/coherence.git", branch: "upgrade-to-phoenix-1.4"}`
+* install coherence - from git! `{:coherence, git: "https://github.com/appprova/coherence.git", branch: "upgrade-to-phoenix-1.4"}` - https://github.com/smpallen99/coherence/issues/410
 * `mix deps.get`
 * `mix coh.install --full --no-recoverable --no-lockable --no-unlockable-with-token`
 * add what it suggests to router.ex, CAREFUL to pipe main scope through :protected; show off routes
