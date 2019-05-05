@@ -83,6 +83,12 @@ Note: kojarzycie jak Twitter wymaga kliknięcia jak są nowe tweety? Lame. Nasze
 
 ---
 
+### Czas na praktykę!
+
+<img src="./assets/thankyou2.gif">
+
+---
+
 # Pytania?
 
 https://paweljw.github.io/phoenix-workshop
