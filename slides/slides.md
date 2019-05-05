@@ -66,6 +66,21 @@ Note: kojarzycie jak Twitter wymaga kliknięcia jak są nowe tweety? Lame. Nasze
 * Coherence - https://github.com/smpallen99/coherence
 * Channels (wbudowane w Phoenixa)
 
+----
+
+## Coherence
+
+* Coherence ~ Devise
+* Dzięki niemu mamy użytkowników z głowy ;)
+
+----
+
+### Co jeszcze jest w pudełku?
+
+* Ecto ~ ActiveRecord
+* Postgrex ~ pg
+* Webpack, jak to Webpack
+
 ---
 
 # Pytania?

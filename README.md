@@ -1,6 +1,6 @@
-# Elixir w Praktyce
+# Phoenix w Praktyce
 
-Warsztaty z Elixira przygotowane dla Codest.
+Warsztaty z Phoenixa przygotowane dla Codest.
 
 ## Wymagania
 
@@ -10,6 +10,8 @@ Warsztaty z Elixira przygotowane dla Codest.
 Jeśli chcesz się bawić z przykładami kodu:
 
 - `brew install elixir` (lub ogarnij dla swojej platformy na https://elixir-lang.org)
+- Phoenix v1.4.4 https://hexdocs.pm/phoenix/installation.html
+- docker i docker-compose dla Twojej platformy
 
 ## Usage
 
