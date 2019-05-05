@@ -89,6 +89,14 @@ Note: kojarzycie jak Twitter wymaga kliknięcia jak są nowe tweety? Lame. Nasze
 
 ---
 
+# Routes
+
+---
+
+# Repos
+
+---
+
 # Pytania?
 
 https://paweljw.github.io/phoenix-workshop

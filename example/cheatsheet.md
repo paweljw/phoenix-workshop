@@ -6,3 +6,14 @@
 * mix ecto.create
 * mix phx.server
 * customize the app to say "Beeper" in main template, show off live reload
+* install coherence - from git! `{:coherence, git: "https://github.com/appprova/coherence.git", branch: "upgrade-to-phoenix-1.4"}`
+* `mix deps.get`
+* `mix coh.install --full --no-recoverable --no-lockable --no-unlockable-with-token`
+* add what it suggests to router.ex, CAREFUL to pipe main scope through :protected; show off routes
+* go back to presentation and talk about routes
+* add what it suggests to seeds
+* go back to presentation and talk about repos
+* show off migration
+* `mix ecto.setup`
+* show off login process
+* add coherence to channels https://hexdocs.pm/coherence/readme.html#phoenix-channel-authentication - surprise tool for later
