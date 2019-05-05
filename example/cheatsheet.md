@@ -17,3 +17,4 @@
 * `mix ecto.setup`
 * show off login process
 * add coherence to channels https://hexdocs.pm/coherence/readme.html#phoenix-channel-authentication - surprise tool for later
+* remember difference between Beeper and BeeperWeb when customizing layouts `<%= BeeperWeb.Coherence.ViewHelpers.coherence_links(@conn, :layout) %>`
