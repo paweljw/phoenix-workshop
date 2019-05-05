@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Warsztaty - Elixir</title>
+    <link rel="stylesheet" href="./css/reveal.css" />
+    <link rel="stylesheet" href="./_assets/./slides/assets/style.css" id="theme" />
+    <link rel="stylesheet" href="./css/highlight/monokai.css" />
+    <link rel="stylesheet" href="./css/print/paper.css" type="text/css" media="print" />
+    <link rel="stylesheet" href="./_assets/slides/assets/impact.css" />
+    <link rel="stylesheet" href="./_assets/slides/assets/style.css" />
+
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides"><section  data-markdown><script type="text/template">
+
+<!-- .slide: data-background="./assets/codest-opener.svg" id="opener" -->
+
+# Elixir w praktyce
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+## Pawel J. Wal @ Codest 2019
+</script></section><section ><section data-markdown><script type="text/template">
+# Elixir
+
+<aside class="notes"><p>Elixir. Co to w ogóle jest?</p>
+</aside></script></section><section data-markdown><script type="text/template">
+> Elixir is a dynamic, functional language designed for building scalable and maintainable applications.
+
+> Elixir leverages the Erlang VM, known for running low-latency, distributed and fault-tolerant systems (...)
+
+&mdash; elixir-lang.org
+
+<aside class="notes"><p>Na stronie elixir lang org przeczytamy ze jest to dynamiczny, funkcjonalny jezyk do tworzenia skalowalnych i utrzymywalnych aplikacji. I ze jest zbudowany w oparciu o Erlang VM.</p>
+</aside></script></section><section data-markdown><script type="text/template">
+# Erlang
+
+* telekomy
+* bankowość
+* instant messaging
+
+&mdash; erlang.org
+
+<aside class="notes"><p>odpakujmy to moze od konca. Co to jest ten Erlang? Do kogo jest skierowany?</p>
+</aside></script></section><section data-markdown><script type="text/template">
+## Kto używa Erlanga?
+
+* Facebook
+* WhatsApp
+* T-Mobile
+* Motorola
+* Ericsson
+</script></section><section data-markdown><script type="text/template">
+## Co używa Erlanga?
+
+* RabbitMQ
+* CouchDB
+* Ejabberd
+</script></section><section data-markdown><script type="text/template">
+```erlang
+%% https://github.com/ninenines/cowboy/blob/master/src/cowboy_http2.erl
+
+-spec init(pid(), ranch:ref(), inet:socket(), module(),
+	ranch_proxy_header:proxy_info() | undefined, cowboy:opts(),
+	{inet:ip_address(), inet:port_number()}, {inet:ip_address(), inet:port_number()},
+	binary() | undefined, binary()) -> ok.
+init(Parent, Ref, Socket, Transport, ProxyHeader, Opts, Peer, Sock, Cert, Buffer) ->
+	{ok, Preface, HTTP2Machine} = cow_http2_machine:init(server, Opts),
+	State = set_timeout(#state{parent=Parent, ref=Ref, socket=Socket,
+		transport=Transport, proxy_header=ProxyHeader,
+		opts=Opts, peer=Peer, sock=Sock, cert=Cert,
+		http2_init=sequence, http2_machine=HTTP2Machine}),
+	Transport:send(Socket, Preface),
+	case Buffer of
+		<<>> -> loop(State, Buffer);
+		_ -> parse(State, Buffer)
+	end.
+```
+
+<aside class="notes"><p>Problem jest taki, ze erlang wyglada o tak.</p>
+</aside></script></section></section><section ><section data-markdown><script type="text/template">
+# Elixir
+
+* "Cukier" nad składnią Erlanga
+* Kompiluje się do BEAM (bytecode dla Erlang VM)
+* Sponsorowany przez Plataformatec
+</script></section><section data-markdown><script type="text/template">
+## Skalowalność
+
+* "lekkie" wątki (nie OS threads)
+* rozwiązanie problemów współbieżności (immutability, message passing)
+* izolacja - uproszczone GC
+
+W konsekwencji - lepsze wykorzystanie zasobów maszyny
+</script></section><section data-markdown><script type="text/template">
+## Odporność na błędy
+
+* _"things will go wrong"_
+* rozwiązanie - supervisors
+
+<aside class="notes"><p>aplikacja w Elixirze składa się z tzw. supervision tree - supervisorów które mogą mieć pod sobą inne supervisory lub grupy dzieci. Jak coś klęknie supervisor restartuje aplikację do znanego dobrego stanu (reinicjalizuje odpowiednią część drzewa)</p>
+</aside></script></section><section data-markdown><script type="text/template">
+## Dynamizm
+
+* Nie ma silnego typowania
+* Jest pattern matching
+* Są guard clauses
+* Są definicje struktur
+</script></section><section data-markdown><script type="text/template">
+## Functional programming
+
+* Dane nie mutują
+* Nie ma obiektów
+* Nie ma stanów
+* Mamy takie przyjemności jak destrukturyzacja (przez pattern matching) i pipe operator `|>`
+</script></section><section data-markdown><script type="text/template">
+## Community
+
+* Zamiast `bundle` jest `mix`
+* Zamiast `rubygems.org` jest `hex.pm`
+* Zamiast `Rubyist` jest `Alchemist` 😉
+</script></section></section><section ><section data-markdown><script type="text/template">
+## Elixir: pierwsze 5 minut
+</script></section><section data-markdown><script type="text/template">
+### We can into Hello World
+
+```elixir
+IO.puts "Hello world"
+```
+
+<aside class="notes"><p>IO to modul, nie obiekt!</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Co to jest?
+
+```elixir
+['foo', 123, :bar]
+```
+
+<br/>
+
+<aside class="notes"><p>to jest lista, nie tablica!</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Co to jest?
+
+```elixir
+['foo', 123, :bar]
+```
+
+https://hexdocs.pm/elixir/List.html
+</script></section><section data-markdown><script type="text/template">
+### Co to jest?
+
+```elixir
+:foo
+```
+
+<br/>
+
+<aside class="notes"><p>to jest atom, nie symbol!</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Co to jest?
+
+```elixir
+:foo
+```
+
+https://hexdocs.pm/elixir/Atom.html
+</script></section><section data-markdown><script type="text/template">
+### Co to jest?
+
+```elixir
+%{name: "Paweł", surname: "Wal", age: 28, alchemist: :uhhh}
+```
+
+<br/>
+
+<aside class="notes"><p>to jest mapa, nie hash!</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Co to jest?
+
+```elixir
+%{name: "Paweł", surname: "Wal", age: 28, alchemist: :uhhh}
+```
+
+https://hexdocs.pm/elixir/Map.html
+</script></section><section data-markdown><script type="text/template">
+### Co to jest?
+
+```elixir
+{"Paweł", 28, :uhhh}
+```
+
+<br/>
+
+<aside class="notes"><p>to jest tupla, zauwaz brak % z przodu</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Co to jest?
+
+```elixir
+{"Paweł", 28, :uhhh}
+```
+
+https://hexdocs.pm/elixir/Tuple.html
+</script></section><section data-markdown><script type="text/template">
+### Dokończ zwrotkę
+
+```elixir
+person = %{name: "Paweł", surname: "Wal", age: 28}
+%{name: name} = person
+IO.puts name
+```
+
+<aside class="notes"><p>sprawdźmy w iex</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Programista wchodzi do baru
+
+```elixir
+programmer = %{name: "Paweł", surname: "Wal", age: 28}
+
+def a_programmer_walks_into_a_bar(%{age: age}) when age >= 18 do
+  IO.puts "To co zwykle?"
+end
+
+a_programmer_walks_into_a_bar(programmer)
+```
+
+<aside class="notes"><p>sprawdźmy w iex - bum!</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Programista wchodzi do baru
+
+```elixir
+programmer = %{name: "Paweł", surname: "Wal", age: 28}
+
+defmodule Bar do
+  def a_programmer_walks_into_a_bar(%{age: age}) when age >= 18 do
+    IO.puts "To co zwykle?"
+  end
+end
+
+Bar.a_programmer_walks_into_a_bar(programmer)
+```
+
+<aside class="notes"><p>sprawdźmy w iex</p>
+</aside></script></section><section data-markdown><script type="text/template">
+#### Młodszy programista wchodzi do baru
+
+```elixir
+programmer = %{name: "Paweł", surname: "Wal", age: 16}
+
+defmodule Bar do
+  def a_programmer_walks_into_a_bar(%{age: age}) when age >= 18 do
+    IO.puts "To co zwykle?"
+  end
+end
+
+Bar.a_programmer_walks_into_a_bar(programmer)
+```
+
+<aside class="notes"><p>sprawdźmy w iex</p>
+</aside></script></section></section><section  data-markdown><script type="text/template">
+### Czas na praktykę!
+
+<img src="./assets/shoot.gif">
+</script></section><section ><section data-markdown><script type="text/template">
+### Testy
+
+* `bundle exec rspec` => `mix test`
+* `bundle exec rspec --format documentation` => `mix test --trace`
+* `RSpec` => `ExUnit`
+
+https://hexdocs.pm/ex_unit/ExUnit.html
+</script></section><section data-markdown><script type="text/template">
+### Doctests
+
+* generowane z dokumentacji (sekcje `## Examples`)
+* nie mymagają `ex_docs` (ale czemu nie!)
+* przykłady - jak sekcja `iex`
+* dokumentacja to testy, testujemy też dokumentację
+
+<aside class="notes"><p>same plusy - dokumentacja jest aktualna, stanowi testy, jeśli docsy kłamią to testy nie przechodzą</p>
+</aside></script></section></section><section ><section data-markdown><script type="text/template">
+### Debugowanie
+
+* `IO.puts`
+</script></section><section data-markdown><script type="text/template">
+### Debugowanie ;)
+
+* `IEx.pry` (musimy wcześniej `require IEx`)
+* podobny do gema `pry`
+* nie tak dobry dostęp do lokalnego stanu
+</script></section><section data-markdown><script type="text/template">
+### Debugger
+
+* Elixir posiada wbudowany graficzny debugger
+* można go używać wprost z `iex`
+</script></section><section data-markdown><script type="text/template">
+### Debugger
+
+* `:debugger.start()` - start debuggera
+* `:int.ni(NaszModul)` - instrumentacja modułu
+* `:int.break(NaszModul, 42)` - breakpoint w linii 42
+</script></section></section><section ><section data-markdown><script type="text/template">
+### Process
+
+* Wszystko w Elixirze dzieje się w procesach
+* Procesy są odizolowane i porozumiewają się przez message passing
+* Nie tylko współbieżność ale i rozproszenie
+* Nie OS processes!
+
+https://elixir-lang.org/getting-started/processes.html
+
+<aside class="notes"><p>message passing nie musi odbywać się lokalnie, klaster eliksirowy moze byc na wielu maszynach i wysylac sobie wiadomosci po sieci</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Process
+
+* Process ma wewnętrzny stan 😮
+* Stan Process zmieniamy via message passing
+</script></section><section data-markdown><script type="text/template">
+### Task
+
+* Wrapper nad funkcją `spawn` tworzącą procesy
+* Dostarcza lepszy error reporting
+</script></section><section data-markdown><script type="text/template">
+### Task ze stanem
+
+```elixir
+defmodule KV do
+  def start_link do
+    Task.start_link(fn -> loop(%{}) end)
+  end
+
+  defp loop(map) do
+    receive do
+      {:get, key, caller} ->
+        send caller, Map.get(map, key)
+        loop(map)
+      {:put, key, value} ->
+        loop(Map.put(map, key, value))
+    end
+  end
+end
+```
+
+<aside class="notes"><p>stan przechowujemy bo wywołujemy na samych sobie metodę w której parametrem jest nasz stan
+To nie jest busy loop! Receive pasywnie czeka na wiadomosc</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Task ze stanem
+
+```elixir
+iex> {:ok, pid} = KV.start_link
+{:ok, #PID<0.62.0>}
+iex> send pid, {:put, :hello, :world}
+{:put, :hello, :world}
+iex> send pid, {:get, :hello, self()}
+{:get, :hello, #PID<0.41.0>}
+iex> flush()
+:world
+:ok
+```
+
+<aside class="notes"><p>usage. Zeby na glownym procesie odebrac musimy zflushowac wiadomosci (nie mamy receive)</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Agent
+
+* Agent to wrapper nad Task
+* Dostarcza uproszczonego DSLa do powyższego zadania
+
+https://elixir-lang.org/getting-started/mix-otp/agent.html
+</script></section><section data-markdown><script type="text/template">
+### Agent
+
+```
+iex> {:ok, agent} = Agent.start_link fn -> [] end
+{:ok, #PID<0.57.0>}
+iex> Agent.update(agent, fn list -> ["eggs" | list] end)
+:ok
+iex> Agent.get(agent, fn list -> list end)
+["eggs"]
+iex> Agent.stop(agent)
+:ok
+```
+
+<aside class="notes"><p>Agent ma start, update i stop - prosciej go uzyc</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### GenServer
+
+* "Generic server"
+* W praktyce do długo żyjących zadań użyjemy GenServera
+* GenServery są "przemysłowo" stabilne
+* Obsługują kilka rodzajów wiadomości
+
+https://elixir-lang.org/getting-started/mix-otp/genserver.html
+</script></section><section data-markdown><script type="text/template">
+### call, cast i info
+
+* `call` - synchroniczny; serwer musi odpowiedzieć (backpressure)
+* `cast` - asynchroniczny, brak odpowiedzi
+* `info` - generalne wiadomości, np. komenda zatrzymania
+</script></section><section data-markdown><script type="text/template">
+### Supervisor
+
+* W Elixirze nie programujemy defensywnie
+* _"Let it crash"_ - wróćmy do pewnego, dobrego stanu
+* Ale jak padnie, kto to podniesie?
+
+https://elixir-lang.org/getting-started/mix-otp/supervisor-and-application.html
+</script></section><section data-markdown><script type="text/template">
+### Supervisor
+
+* Supervisor ma procesy-dzieci
+* Różne strategie podnoszenia dzieci
+* Najprostsza `:one_for_one`
+
+<aside class="notes"><p>one_for_one mowi ze jak jedno dziecko padnie restartujemy tylko to dziecko. one_for_all na przyklad powoduje ze jak jedno dziecko padnie restartujemy wszystkie</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Application
+
+* Pozwala nam zdefiniować "entrypoint" aplikacji
+* W praktyce generuje Erlangowy `.app` przez `mix compile`
+* Tak robilibyśmy deployment
+</script></section></section><section  data-markdown><script type="text/template">
+# Pytania?
+
+https://paweljw.github.io/elixir-workshop
+https://github.com/paweljw/elixir-workshop
+</script></section><section  data-markdown><script type="text/template">
+# [APLAUZ]
+</script></section></div>
+    </div>
+
+    <script src="./lib/js/head.min.js"></script>
+    <script src="./js/reveal.js"></script>
+
+    <script>
+      function extend() {
+        var target = {};
+        for (var i = 0; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      }
+
+      // Optional libraries used to extend on reveal.js
+      var deps = [
+        { src: './lib/js/classList.js', condition: function() { return !document.body.classList; } },
+        { src: './plugin/markdown/marked.js', condition: function() { return !!document.querySelector('[data-markdown]'); } },
+        { src: './plugin/markdown/markdown.js', condition: function() { return !!document.querySelector('[data-markdown]'); } },
+        { src: './plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        { src: './plugin/zoom-js/zoom.js', async: true },
+        { src: './plugin/notes/notes.js', async: true },
+        { src: './plugin/math/math.js', async: true }
+      ];
+
+      // default options to init reveal.js
+      var defaultOptions = {
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        dependencies: deps
+      };
+
+      // options from URL query string
+      var queryOptions = Reveal.getQueryHash() || {};
+
+      var options = extend(defaultOptions, {"transition":"fade"}, queryOptions);
+    </script>
+
+
+    <script>
+      Reveal.initialize(options);
+    </script>
+  </body>
+</html>
