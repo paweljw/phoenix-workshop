@@ -1,3 +1,25 @@
 /* This file is for your main application css. */
 
 @import "./phoenix.css";
+
+.post {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+
+.post__author {
+  float: right;
+  font-weight: bold;
+}
+
+.post__author--highlight {
+  color: green;
+}
+
+.post__timestamp {
+  font-size: 80%;
+  color: #ccc;
+  font-family: 'Courier New', Courier, monospace;
+}

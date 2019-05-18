@@ -147,6 +147,10 @@ $ mix phx.routes
 
 ---
 
+# Views
+
+---
+
 # Pytania?
 
 https://paweljw.github.io/phoenix-workshop

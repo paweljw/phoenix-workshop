@@ -18,4 +18,10 @@
 * show off login process
 * add coherence to channels https://hexdocs.pm/coherence/readme.html#phoenix-channel-authentication - surprise tool for later
 * remember difference between Beeper and BeeperWeb when customizing layouts `<%= BeeperWeb.Coherence.ViewHelpers.coherence_links(@conn, :layout) %>`
-* build Posts with `mix phx.gen.schema Post posts body:text author:references:users`
+* build Posts with `mix phx.gen.html Posting Post posts author_id:references:users body:text`
+* remember to change `example/lib/beeper/posting/post.ex` so it has a `belongs_to` on :author, it's not User but Beeper.Coherence.User!
+* remember to change the Posting repo to preload :author and add an order clause
+* remember to drop extraneous roots
+* remember to Map.merge author_id in PostController and add a redirect to /
+* update routes to have Posts :index at /
+* snazzy up the post display with CSS and html trickery, show off view

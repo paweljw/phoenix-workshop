@@ -79,10 +79,48 @@ Ale Rubyiscie nie bedzie sie trudno odnalezc w Phoenixie.</p>
 ### Czas na praktykę!
 
 <img src="./assets/thankyou2.gif">
-</script></section><section  data-markdown><script type="text/template">
+</script></section><section ><section data-markdown><script type="text/template">
 # Routes
-</script></section><section  data-markdown><script type="text/template">
+
+<aside class="notes"><p>Jak zorganizowane są routes w Phoenixie?</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Pipeline(s)
+
+```elixir
+pipeline :browser do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_flash
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+end
+```
+
+> Plug is a specification for constructing composable modules to build web applications.
+
+<aside class="notes"><p>w Phoenixie mamy pipelines złozone z jednego lub więcej plugów. Plugi to moduly o znanym specu ktore mozna komponowac i przez ktore request przelatuje w znanej kolejnosci.</p>
+<p>Troche jak Rackowe stackowanie warstw.</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Resources
+
+```elixir
+get "/", PageController, :index
+
+resources "/users", UserController
+
+resources "/posts", PostController, only: [:index, :show]
+```
+
+<aside class="notes"><p>Bardzo podobnie jak w Railsach. Mamy helpery get post put patch delete itd, i mamy helper &quot;resources&quot; analogicznie.</p>
+<h3 id="helpers">Helpers</h3>
+<pre><code class="lang-elixir">HelloWeb.Router.Helpers.page_path(HelloWeb.Endpoint, :index)
+</code></pre>
+<pre><code class="lang-bash">$ mix phx.routes
+</code></pre>
+</aside></script></section></section><section  data-markdown><script type="text/template">
 # Repos
+</script></section><section  data-markdown><script type="text/template">
+# Views
 </script></section><section  data-markdown><script type="text/template">
 # Pytania?
 

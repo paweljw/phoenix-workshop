@@ -39,6 +39,7 @@ defmodule BeeperWeb.Router do
   scope "/", BeeperWeb do
     pipe_through [:browser, :protected]
 
-    get "/", PageController, :index
+    get "/", PostController, :index
+    resources "/posts", PostController, only: [:new, :create]
   end
 end
