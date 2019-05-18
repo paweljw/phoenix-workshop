@@ -151,6 +151,12 @@ $ mix phx.routes
 
 ---
 
+# Channels
+
+Note: talk about we can use them from JS and Elixir
+
+---
+
 # Pytania?
 
 https://paweljw.github.io/phoenix-workshop
