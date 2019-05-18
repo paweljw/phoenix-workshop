@@ -91,6 +91,56 @@ Note: kojarzycie jak Twitter wymaga kliknięcia jak są nowe tweety? Lame. Nasze
 
 # Routes
 
+Note: Jak zorganizowane są routes w Phoenixie?
+
+----
+
+### Pipeline(s)
+
+```elixir
+pipeline :browser do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_flash
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+end
+```
+
+> Plug is a specification for constructing composable modules to build web applications.
+
+Note:
+
+w Phoenixie mamy pipelines złozone z jednego lub więcej plugów. Plugi to moduly o znanym specu ktore mozna komponowac i przez ktore request przelatuje w znanej kolejnosci.
+
+Troche jak Rackowe stackowanie warstw.
+
+----
+
+### Resources
+
+```elixir
+get "/", PageController, :index
+
+resources "/users", UserController
+
+resources "/posts", PostController, only: [:index, :show]
+```
+
+Note:
+
+Bardzo podobnie jak w Railsach. Mamy helpery get post put patch delete itd, i mamy helper "resources" analogicznie.
+
+### Helpers
+
+```elixir
+HelloWeb.Router.Helpers.page_path(HelloWeb.Endpoint, :index)
+```
+
+```bash
+$ mix phx.routes
+```
+
 ---
 
 # Repos
