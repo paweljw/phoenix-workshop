@@ -23,3 +23,18 @@
   color: #ccc;
   font-family: 'Courier New', Courier, monospace;
 }
+
+@keyframes postFlash {
+  from {
+    opacity: 0;
+    background-color: #d9edf7;
+  }
+  to {
+    opacity: 1;
+    background-color: #fff;
+  }
+}
+
+.post--highlight {
+  animation: 1s postFlash;
+}

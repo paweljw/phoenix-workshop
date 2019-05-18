@@ -1,10 +1,15 @@
 defmodule BeeperWeb.UserSocket do
   use Phoenix.Socket
 
+  channel "posts", BeeperWeb.PostChannel
+
   def connect(%{"token" => token}, socket) do
-    case Coherence.verify_user_token(socket, token, &assign/3) do
-      {:error, _} -> :error
-      {:ok, socket} -> {:ok, socket}
+    case Phoenix.Token.verify(socket, "user", token, max_age: 1209600) do
+      {:ok, user_id} ->
+        socket = assign(socket, :user, Beeper.Coherence.Schemas.get_user!(user_id))
+        {:ok, socket}
+      {:error, _} ->
+        :error
     end
   end
 

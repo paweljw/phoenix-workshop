@@ -5,11 +5,10 @@
     </div>
   <% end %>
 
-  <%= label f, :body %>
   <%= textarea f, :body %>
   <%= error_tag f, :body %>
 
   <div>
-    <%= submit "Save" %>
+    <%= submit "Beep!" %>
   </div>
 <% end %>

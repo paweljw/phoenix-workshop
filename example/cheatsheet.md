@@ -1,5 +1,3 @@
-# Setup
-
 * mix phx.new --binary-id --verbose --app beeper example
 * cd example
 * set up dev DB - watch the port!
@@ -25,3 +23,10 @@
 * remember to Map.merge author_id in PostController and add a redirect to /
 * update routes to have Posts :index at /
 * snazzy up the post display with CSS and html trickery, show off view
+* build a channel
+* socket needs Phoenix.Token instead of Coherence jazz
+* add a PostChannel with just join
+* add a broadcast to PostController
+* add appropriate JS and a CSS highlight
+* add token and user ID to meta
+* update Form and post index for more Beepery feel

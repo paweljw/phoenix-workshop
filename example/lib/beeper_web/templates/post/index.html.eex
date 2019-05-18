@@ -1,11 +1,13 @@
 <h1>All Posts</h1>
 
-<span><%= link "New Post", to: Routes.post_path(@conn, :new) %></span>
+<%= render "form.html", Map.put(assigns, :action, Routes.post_path(@conn, :create)) %>
 
-<%= for post <- @posts do %>
-<div class="post">
-  <div class="<%= post_classes(@conn, post) %>"><%= post.author.name %></div>
-  <div class="post__body"><%= post.body %></div>
-  <div class="post__timestamp"><%= post.inserted_at %></div>
+<div id="posts">
+  <%= for post <- @posts do %>
+    <div class="post">
+      <div class="<%= post_classes(@conn, post) %>"><%= post.author.name %></div>
+      <div class="post__body"><%= post.body %></div>
+      <div class="post__timestamp"><%= post.inserted_at %></div>
+    </div>
+  <% end %>
 </div>
-<% end %>
