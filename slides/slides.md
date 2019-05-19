@@ -19,6 +19,15 @@ highlightTheme: 'monokai'
 
 ---
 
+## Zasady
+
+* MINASWAN!
+* Pytaj, przerywaj, poprawiaj
+* "Nie wiem" jest OK
+* Bez telefonów proszę
+
+---
+
 # Phoenix
 
 Note: Phoenix. Co to w ogóle jest?
@@ -131,6 +140,8 @@ Note:
 
 Bardzo podobnie jak w Railsach. Mamy helpery get post put patch delete itd, i mamy helper "resources" analogicznie.
 
+----
+
 ### Helpers
 
 ```elixir
@@ -141,19 +152,159 @@ HelloWeb.Router.Helpers.page_path(HelloWeb.Endpoint, :index)
 $ mix phx.routes
 ```
 
+Note:
+
+router zapewnia nam tez, jak w Railsach, pewne path helpery. Warto jednak zwrocic uwage ze nie ma magii jak w Railsach - gdzie helpery
+mamy od razu wstrzykniete w scope. Tu trzeba sie odwolac do modulu. Trzeba tez zauwazyc he HelloWeb to przyklad i tam bedzie nazwa naszego modulu.
+Czyli inaczej niz w railsach bezmyslna copypasta z netu nie dziala :)
+
 ---
 
 # Repos
+
+Note: ActiveRecord przyzwyczaja do operowania na obiektach, ale Elixir nie ma obiektow. Wiec jak to rozwiazujemy? Przez Repo.
+
+----
+
+### Repo
+
+* odpowiada za dostęp do bazy danych
+* operujemy na nim za pomocą Ecto.Query
+
+https://hexdocs.pm/ecto/Ecto.Repo.html
+
+----
+
+### Repos!
+
+* jedno repo per aplikacja byłoby niewygodne
+* organizujemy je w konteksty
+* odwrotnie niż w Railsach wszystko możemy zmodyfikować
+
+Note:
+
+na przyklad Takie Posts.all zawsze dziala tak samo. W Phoenixie moemy tworzyć dowolne funkcje i modyfikować ich zachowanie
+
+----
+
+### Schema
+
+* Schema mapuje structy Elixira do zewnętrznych struktur danych
+* Schemy też możemy dowolnie modyfikować
+* Definiujemy w nich klucze, relacje, mapowania, walidacje, ...
+
+https://hexdocs.pm/ecto/Ecto.Schema.html
+
+----
+
+### Query
+
+* Ecto dostarcza moduł pozwalający na budowanie zapytań
+* ActiveRecord ogranicza, Ecto daje nam dość sznurka żeby się zastrzelić
+
+https://hexdocs.pm/ecto/Ecto.Query.html
+
+----
+
+### Query
+
+```elixir
+# Create query
+query = from u in "users",
+          where: u.age > 18,
+          select: u.name
+
+# Send the query to the repository
+Repo.all(query)
+```
+
+Note: w ten sposób mozna budowac query - ze wszystkim co chcesz, joinami, having, order, distinct, groupby, ...
+
+----
+
+### Query
+
+```elixir
+def with_minimum(age, height_ft) do
+  from u in "users",
+    where: u.age > ^age and u.height > ^(height_ft * 3.28),
+    select: u.name
+end
+
+with_minimum(18, 5.0)
+
+# where: u.age > type(^age, :integer),
+```
+
+Note: mozemy bindować tez zewnętrzne wartości do wnętrza query oraz wprowadzac explicit casty.
 
 ---
 
 # Views
 
+Note: podobnie jak helpery w Railsach, ale znacznie mocniej scoped.
+
+----
+
+### Views
+
+* PostController => PostView
+* View jest _wymagany_
+* Wszelka logika prezentacyjna idzie do konkretnego View
+* Globalne helpery trzymamy gdzie indziej (np. w dedykowanym module)
+
+https://hexdocs.pm/phoenix/Phoenix.View.html
+
+----
+
+### Views
+
+* Wszystkie widoki są prekompilowane (compile-time)
+* View nie generuje disk-loadów po kompilacji (!!!)
+
+Note: i między innymi dlatego Phoenix moze byc DZIKO szybki.
+
 ---
 
 # Channels
 
-Note: talk about we can use them from JS and Elixir
+----
+
+### Channels
+
+* jak ActionCable...
+* ...na WROTKACH Z DOPALACZEM
+* napędzane GenServerami
+
+https://hexdocs.pm/phoenix/Phoenix.Channel.html#content
+
+Note: channele pozwalaja nam na komunikacje push z serwerem (websockets, long polling)
+
+----
+
+### Channels
+
+* Kanał ma pokoje
+* Pokój ma subskrybentów
+* PubSub - klient (lub serwer) broadcastuje, klienci odbierają i reagują
+
+----
+
+### Channels
+
+* Można czytać i pisać po nich z:
+  * Elixira
+  * JavaScriptu
+  * ??? (cokolwiek da radę podpiąć się pod websocket)
+
+----
+
+### Channels
+
+* Zabezpieczamy tokenami które generujemy na backendzie i przekazujemy do JSa
+* Pomaga w tym Phoenix.Token
+
+https://hexdocs.pm/phoenix/Phoenix.Token.html#content
 
 ---
 
@@ -161,6 +312,8 @@ Note: talk about we can use them from JS and Elixir
 
 https://paweljw.github.io/phoenix-workshop
 https://github.com/paweljw/phoenix-workshop
+
+@paweljwal
 
 ---
 

@@ -27,6 +27,13 @@
 <br/>
 
 ## Pawel J. Wal @ Codest 2019
+</script></section><section  data-markdown><script type="text/template">
+## Zasady
+
+* MINASWAN!
+* Pytaj, przerywaj, poprawiaj
+* "Nie wiem" jest OK
+* Bez telefonów proszę
 </script></section><section ><section data-markdown><script type="text/template">
 # Phoenix
 
@@ -112,24 +119,143 @@ resources "/posts", PostController, only: [:index, :show]
 ```
 
 <aside class="notes"><p>Bardzo podobnie jak w Railsach. Mamy helpery get post put patch delete itd, i mamy helper &quot;resources&quot; analogicznie.</p>
-<h3 id="helpers">Helpers</h3>
-<pre><code class="lang-elixir">HelloWeb.Router.Helpers.page_path(HelloWeb.Endpoint, :index)
-</code></pre>
-<pre><code class="lang-bash">$ mix phx.routes
-</code></pre>
-</aside></script></section></section><section  data-markdown><script type="text/template">
-# Repos
-</script></section><section  data-markdown><script type="text/template">
-# Views
-</script></section><section  data-markdown><script type="text/template">
-# Channels
+</aside></script></section><section data-markdown><script type="text/template">
+### Helpers
 
-<aside class="notes"><p>talk about we can use them from JS and Elixir</p>
-</aside></script></section><section  data-markdown><script type="text/template">
+```elixir
+HelloWeb.Router.Helpers.page_path(HelloWeb.Endpoint, :index)
+```
+
+```bash
+$ mix phx.routes
+```
+
+<aside class="notes"><p>router zapewnia nam tez, jak w Railsach, pewne path helpery. Warto jednak zwrocic uwage ze nie ma magii jak w Railsach - gdzie helpery
+mamy od razu wstrzykniete w scope. Tu trzeba sie odwolac do modulu. Trzeba tez zauwazyc he HelloWeb to przyklad i tam bedzie nazwa naszego modulu.
+Czyli inaczej niz w railsach bezmyslna copypasta z netu nie dziala :)</p>
+</aside></script></section></section><section ><section data-markdown><script type="text/template">
+# Repos
+
+<aside class="notes"><p>ActiveRecord przyzwyczaja do operowania na obiektach, ale Elixir nie ma obiektow. Wiec jak to rozwiazujemy? Przez Repo.</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Repo
+
+* odpowiada za dostęp do bazy danych
+* operujemy na nim za pomocą Ecto.Query
+
+https://hexdocs.pm/ecto/Ecto.Repo.html
+</script></section><section data-markdown><script type="text/template">
+### Repos!
+
+* jedno repo per aplikacja byłoby niewygodne
+* organizujemy je w konteksty
+* odwrotnie niż w Railsach wszystko możemy zmodyfikować
+
+<aside class="notes"><p>na przyklad Takie Posts.all zawsze dziala tak samo. W Phoenixie moemy tworzyć dowolne funkcje i modyfikować ich zachowanie</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Schema
+
+* Schema mapuje structy Elixira do zewnętrznych struktur danych
+* Schemy też możemy dowolnie modyfikować
+* Definiujemy w nich klucze, relacje, mapowania, walidacje, ...
+
+https://hexdocs.pm/ecto/Ecto.Schema.html
+</script></section><section data-markdown><script type="text/template">
+### Query
+
+* Ecto dostarcza moduł pozwalający na budowanie zapytań
+* ActiveRecord ogranicza, Ecto daje nam dość sznurka żeby się zastrzelić
+
+https://hexdocs.pm/ecto/Ecto.Query.html
+</script></section><section data-markdown><script type="text/template">
+### Query
+
+```elixir
+# Create query
+query = from u in "users",
+          where: u.age > 18,
+          select: u.name
+
+# Send the query to the repository
+Repo.all(query)
+```
+
+<aside class="notes"><p>w ten sposób mozna budowac query - ze wszystkim co chcesz, joinami, having, order, distinct, groupby, ...</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Query
+
+```elixir
+def with_minimum(age, height_ft) do
+  from u in "users",
+    where: u.age > ^age and u.height > ^(height_ft * 3.28),
+    select: u.name
+end
+
+with_minimum(18, 5.0)
+
+# where: u.age > type(^age, :integer),
+```
+
+<aside class="notes"><p>mozemy bindować tez zewnętrzne wartości do wnętrza query oraz wprowadzac explicit casty.</p>
+</aside></script></section></section><section ><section data-markdown><script type="text/template">
+# Views
+
+<aside class="notes"><p>podobnie jak helpery w Railsach, ale znacznie mocniej scoped.</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Views
+
+* PostController => PostView
+* View jest _wymagany_
+* Wszelka logika prezentacyjna idzie do konkretnego View
+* Globalne helpery trzymamy gdzie indziej (np. w dedykowanym module)
+
+https://hexdocs.pm/phoenix/Phoenix.View.html
+</script></section><section data-markdown><script type="text/template">
+### Views
+
+* Wszystkie widoki są prekompilowane (compile-time)
+* View nie generuje disk-loadów po kompilacji (!!!)
+
+<aside class="notes"><p>i między innymi dlatego Phoenix moze byc DZIKO szybki.</p>
+</aside></script></section></section><section ><section data-markdown><script type="text/template">
+# Channels
+</script></section><section data-markdown><script type="text/template">
+### Channels
+
+* jak ActionCable...
+* ...na WROTKACH Z DOPALACZEM
+* napędzane GenServerami
+
+https://hexdocs.pm/phoenix/Phoenix.Channel.html#content
+
+<aside class="notes"><p>channele pozwalaja nam na komunikacje push z serwerem (websockets, long polling)</p>
+</aside></script></section><section data-markdown><script type="text/template">
+### Channels
+
+* Kanał ma pokoje
+* Pokój ma subskrybentów
+* PubSub - klient (lub serwer) broadcastuje, klienci odbierają i reagują
+</script></section><section data-markdown><script type="text/template">
+### Channels
+
+* Można czytać i pisać po nich z:
+  * Elixira
+  * JavaScriptu
+  * ??? (cokolwiek da radę podpiąć się pod websocket)
+</script></section><section data-markdown><script type="text/template">
+### Channels
+
+* Zabezpieczamy tokenami które generujemy na backendzie i przekazujemy do JSa
+* Pomaga w tym Phoenix.Token
+
+https://hexdocs.pm/phoenix/Phoenix.Token.html#content
+</script></section></section><section  data-markdown><script type="text/template">
 # Pytania?
 
 https://paweljw.github.io/phoenix-workshop
 https://github.com/paweljw/phoenix-workshop
+
+@paweljwal
 </script></section><section  data-markdown><script type="text/template">
 # [APLAUZ]
 </script></section></div>
